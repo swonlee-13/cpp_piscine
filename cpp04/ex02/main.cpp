@@ -2,19 +2,7 @@
 #include "Cat.hpp"
 
 int main() {
-	// std::cout << "-----------test1------------" << std::endl;
-	// 	const Animal *animal[4];
-
-	// 	animal[0] = new Cat();
-	// 	animal[1] = new Dog();
-	// 	animal[2] = new Cat();
-	// 	animal[3] = new Dog();
-
-	// 	for(int i = 0; i < 4; i++) {
-	// 		delete animal[i];
-	// 	}
-	// 	return 0;
-	std::cout << "-----------test2-----------" << std::endl;
+	std::cout << "--------------test : normal test-----------" << std::endl;
 	const Animal *animal[4];
 	
 	animal[0] = new Cat();
@@ -26,4 +14,17 @@ int main() {
 		animal[i]->makeSound();
 		delete animal[i];
 	}
+
+	// std::cout << "-----------test : doesn't work----------" << std::endl;
+	// const Animal *animal[4];
+	
+	// animal[0] = new Cat();
+	// animal[1] = new Animal();
+	// animal[2] = new Cat();
+	// animal[3] = new Animal();
+
+	// for (int i = 0; i < 4; i++) {
+	// 	animal[i]->makeSound();
+	// 	delete animal[i];
+	// }
 }

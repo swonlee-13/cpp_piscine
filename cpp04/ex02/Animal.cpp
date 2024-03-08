@@ -19,7 +19,7 @@ Animal &Animal::operator=(const Animal &Copy) {
 }
 
 Animal::~Animal() {
-	std::cout << "Animal Destructor called." << std::endl;
+	std::cout << "Animal Destructor called 🌎." << std::endl;
 }
 
 /* Additional Constructor */

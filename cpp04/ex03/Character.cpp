@@ -3,19 +3,25 @@
 #include "ICharacter.hpp"
 
 Character::Character() : _name("default") {
+	std::cout << "Character " << _name << " created." << std::endl;
 	for(int i = 0; i < 4; i++)
 		_slot[i] = NULL;
 }
 
 Character::Character(std::string name) : _name(name) {
+	std::cout << "Character " << _name << " created." << std::endl;
 	for(int i = 0; i < 4; i++)
 		_slot[i] = NULL;
 }
 
-Character::Character(const Character &Copy) {*this = Copy;}
+Character::Character(const Character &Copy) {
+	*this = Copy;
+	std::cout << "Character " << _name << " created." << std::endl;
+}
 
 Character &Character::operator=(const Character &Copy) {
 	if (this != &Copy) {
+		std::cout << "Copy assignment operator called." << std::endl;
 		this->_name = Copy._name;
 		for (int i = 0; i < 4; i++) {
 			if (_slot[i] != NULL) { delete _slot[i];}
@@ -28,6 +34,7 @@ Character &Character::operator=(const Character &Copy) {
 std::string const & Character::getName() const {return _name;}
 
 Character::~Character() {
+	std::cout << "Character" << _name << " deleted." << std::endl;
 	for (int i = 0; i < 4; i++) {
 		if (_slot[i] != NULL)
 			delete _slot[i];
@@ -38,9 +45,11 @@ void Character::equip(AMateria *m) {
 	for (int i = 0; i < 4; i++) {
 		if (_slot[i] == NULL) {
 			_slot[i] = m;
-			break;
+			return ;
 		}
 	}
+	std::cerr << "slots are full. skill deleted." << std::endl;
+	delete m;
 }
 
 void Character::unequip(int idx) {

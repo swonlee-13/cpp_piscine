@@ -2,8 +2,8 @@
 
 /* OCCF */
 Dog::Dog() : Animal("Dog") {
-	this->Brain = new class Brain();
 	std::cout << "Dog created 🐶." << std::endl;
+	this->Brain = new class Brain();
 }
 
 Dog::Dog(const Dog &Copy) : Animal("Dog") {	
@@ -21,7 +21,7 @@ Dog &Dog::operator=(const Dog &Copy)
 
 Dog::~Dog() {
 	delete this->Brain;
-	std::cout << "Dog destructor called." << std::endl;
+	std::cout << "Dog destructor called 🐶." << std::endl;
 }
 
 /* Overloaded function */

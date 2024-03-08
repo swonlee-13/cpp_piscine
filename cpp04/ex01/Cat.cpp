@@ -2,8 +2,8 @@
 
 /* OCCF */
 Cat::Cat() : Animal("cat") {
-	this->Brain = new class Brain();
 	std::cout << "cat created 🐈." << std::endl;
+	this->Brain = new class Brain();
 }
 
 Cat::Cat(const Cat &Copy) : Animal("cat") {

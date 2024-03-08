@@ -1,11 +1,11 @@
 #include "Brain.hpp"
 
 Brain::Brain() {
-	std::cout << "Brain created." << std::endl;
+	std::cout << "Brain created 💡." << std::endl;
 }
 
 Brain::Brain(const Brain &Copy) {
-	std::cout << "Copy assignment constructor called." << std::endl;
+	std::cout << "Brain created 💡." << std::endl;
 	*this = Copy;
 }
 
@@ -18,5 +18,5 @@ Brain &Brain::operator=(const Brain &Copy) {
 }
 
 Brain::~Brain() {
-	std::cout << "Brain deleted." << std::endl;
+	std::cout << "Brain deleted 💡." << std::endl;
 }
