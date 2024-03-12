@@ -17,19 +17,17 @@ class Bureaucrat
 
 		std::string getName() const;
 		int getGrade() const;		
-		void increment(int promotionGap);
-		void decrement(int relegationGap);
+		void increment();
+		void decrement();
 
 		class GradeTooLowException : public std::exception {
 			public : 
 				const char *what()const throw();
-				// GradeTooLowException();
 		};
 
 		class GradeTooHighException : public std::exception {
 			public :
 				const char *what()const throw();
-				// GradeTooHighException();
 		};
 };
 

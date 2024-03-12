@@ -28,27 +28,22 @@ int Bureaucrat::getGrade() const {
 	return _grade;
 }
 
-void Bureaucrat::increment(int promotionGap){
-	if (_grade - promotionGap < 1)
+void Bureaucrat::increment(){
+	if (_grade - 1 < 1)
 		throw GradeTooHighException();
-	_grade -= promotionGap;
+	_grade--;
 }
 
-void Bureaucrat::decrement(int relegationGap){
-	if (_grade + relegationGap > 150){
-		std::cout << "test\n";
+void Bureaucrat::decrement(){
+	if (_grade + 1 > 150){
 		throw GradeTooLowException();
 	}
-		_grade += relegationGap;
+	_grade++;
 }
-
-// Bureaucrat::GradeTooLowException::GradeTooLowException() {}
 
 const char *Bureaucrat::GradeTooLowException::what()const throw() {
 	return "Current grade is lower than minimum value(150).";
 }
-
-// Bureaucrat::GradeTooHighException::GradeTooHighException() {}
 
 const char *Bureaucrat::GradeTooHighException::what()const throw() {
 	return "Current grade higher than maximum value(1).";
