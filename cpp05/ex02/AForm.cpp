@@ -8,6 +8,8 @@ _name(name), _isSigned(false), _gradeToSign(gradeToSign), _gradeToExecute(gradeT
 		throw GradeTooLowException();
 	if (_gradeToSign < 1 || _gradeToExecute < 1)
 		throw GradeTooHighException();
+	if (_gradeToSign < _gradeToExecute)
+		throw GradeReverseOrderException();
 }
 
 AForm::AForm(const AForm &Copy) : _name(Copy._name), _isSigned(Copy._isSigned), _gradeToSign(Copy._gradeToSign), _gradeToExecute(Copy._gradeToExecute) {}
@@ -59,4 +61,8 @@ const char *AForm::GradeTooHighException::what()const throw() {
 
 const char *AForm::NotSignedYetException::what()const throw() {
 	return "Not signed yet.";
+}
+
+const char *AForm::GradeReverseOrderException::what()const throw() {
+	return "Sign_grade cannot be set higher than execute_grade.";
 }

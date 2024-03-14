@@ -8,7 +8,7 @@ class Bureaucrat;
 
 class AForm
 {
-	protected:
+	private:
 		const std::string _name;
 		bool _isSigned;
 		const int _gradeToSign;
@@ -20,7 +20,7 @@ class AForm
 		AForm(const AForm &Copy);
 		virtual ~AForm();
 
-		std::string getName () const;
+		std::string getName() const;
 		bool getIsSigned() const;
 		int getGrageToSign() const;
 		int getGradeToExecute() const;
@@ -29,17 +29,22 @@ class AForm
 		virtual void execute(Bureaucrat const & executor) const = 0;
 
 		class GradeTooLowException : public std::exception {
-			public : 
+			public: 
 				const char *what()const throw();
 		};
 
 		class GradeTooHighException : public std::exception {
-			public :
+			public:
 				const char *what()const throw();
 		};
 
 		class NotSignedYetException : public std::exception {
-			public :
+			public:
+				const char *what()const throw();
+		};
+
+		class GradeReverseOrderException : public std::exception {
+			public:
 				const char *what()const throw();
 		};
 };

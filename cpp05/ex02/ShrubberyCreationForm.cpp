@@ -16,14 +16,14 @@ ShrubberyCreationForm::ShrubberyCreationForm(const ShrubberyCreationForm &Copy) 
 ShrubberyCreationForm::~ShrubberyCreationForm() {}
 
 void ShrubberyCreationForm::execute(Bureaucrat const & executor) const {
-	if (this->_isSigned == false)
+	if (this->getIsSigned() == false)
 		throw NotSignedYetException();
-	if (this->_gradeToExecute < executor.getGrade())
+	if (this->getGradeToExecute() < executor.getGrade())
 		throw GradeTooLowException();	
 
 	/* executing */
 
-	std::string fileName = _name + "_shrubbery";
+	std::string fileName = getName() + "_shrubbery";
 	std::ofstream outFile(fileName);
 	if (!outFile.is_open())
 		throw std::ios_base::failure("Failed to open file");

@@ -18,7 +18,6 @@ class ShrubberyCreationForm : public AForm
 		ShrubberyCreationForm(const ShrubberyCreationForm &Copy);
 		~ShrubberyCreationForm();
 
-		void beSigned(const Bureaucrat &param);
 		void execute(Bureaucrat const & executor) const;
 };
 #endif
