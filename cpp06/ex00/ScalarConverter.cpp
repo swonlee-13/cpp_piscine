@@ -73,17 +73,20 @@ void ScalarConverter::convert(const std::string& literal) {
 			charImpossible = true;
 			c = '\0';
 		}
-		if (c != '\0') {
+		if (charImpossible == false) {
 			i = static_cast<int>(c);
 			f = static_cast<float>(c);
 			d = static_cast<double>(c);
 		}
     } else {
+
         try {
             i = static_cast<int>(std::stoi(literal));
 			if (std::isprint(static_cast<char>(i))) {
-				c = static_cast<char>(i);
-			} else {charImpossible = true;}
+                c = static_cast<char>(i);
+            } else {
+                charImpossible = true;
+            }
         } catch (const std::invalid_argument& e) {
 			charImpossible = true;
             intImpossible = true;
