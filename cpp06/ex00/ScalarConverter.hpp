@@ -11,6 +11,6 @@ class ScalarConverter
 		ScalarConverter &operator=(const ScalarConverter &Copy);
 	public:
 		~ScalarConverter();
-		static void convert(std::string param);
+		static void convert(std::string &param);
 };
 #endif
