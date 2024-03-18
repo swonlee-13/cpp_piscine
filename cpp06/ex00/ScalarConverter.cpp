@@ -26,11 +26,16 @@ bool ScalarConverter::isValidInput(const std::string &literal) {
                     return false;
                 }
                 dotFlag = true;
-            } else if (!std::isdigit(literal[pos])) {
+            } else if (!std::isdigit(literal[pos]) && pos != literal.length() - 1) {
                 return false;
-            } else if (literal[literal.length() - 1] == '.')
-                return false;
+            }
         }
+        if (literal[literal.length() - 1] == '.')
+            return false;
+        if (literal[literal.length() - 1] == 'f')
+            return true;
+        else if (!isdigit(literal[literal.length() - 1]))
+            return false;
         return true;
     }
 
@@ -44,8 +49,10 @@ void ScalarConverter::convert(const std::string& literal) {
     bool floatImpossible = false;
     bool doubleImpossible = false;
 	
-    if (isValidInput(literal) == false)
-        throw "Invalid literal input.";
+    if (isValidInput(literal) == false) {
+        std::cout << "Invalid numeric input." << std::endl;
+        return ;
+    }
     if (literal == "-inff" || literal == "+inff" || literal == "nanf") {
         charImpossible = true;
         intImpossible = true;
@@ -61,7 +68,7 @@ void ScalarConverter::convert(const std::string& literal) {
             std::numeric_limits<double>::quiet_NaN();
 		f = static_cast<float>(d);
     } else if (literal.length() == 1 && !std::isdigit(literal[0])) {
-        if (std::isprint(literal[0])) c = literal[0];
+        if (std::isprint(literal[0])) {c = literal[0];}
 		else {
 			charImpossible = true;
 			c = '\0';
@@ -74,7 +81,7 @@ void ScalarConverter::convert(const std::string& literal) {
     } else {
         try {
             i = static_cast<int>(std::stoi(literal));
-			if (std::isprint(i)) {
+			if (std::isprint(static_cast<char>(i))) {
 				c = static_cast<char>(i);
 			} else {charImpossible = true;}
         } catch (const std::invalid_argument& e) {

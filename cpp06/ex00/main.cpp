@@ -6,10 +6,6 @@ int main(int ac, char* av[]) {
         return 1;
     }
 	std::string param = av[1];
-    try {
-        ScalarConverter::convert(param);
-    } catch (const char * e) {
-        std::cout << e << std::endl;
-    }
+    ScalarConverter::convert(param);
     return 0;
 }
