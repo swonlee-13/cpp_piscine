@@ -8,9 +8,32 @@ ScalarConverter &ScalarConverter::operator=(const ScalarConverter &Copy) {(void)
 
 ScalarConverter::~ScalarConverter() {}
 
-bool isPrint(char c) { return (c >= 33 && c <= 126);}
+bool ScalarConverter::isValidInput(const std::string &literal) {
+        if (literal.length() == 1 && !std::isdigit(literal[0])) {
+            return true;
+        }
 
-void ScalarConverter::convert(std::string& literal) {
+        size_t pos = 0;
+        if (literal[pos] == '-' || literal[pos] == '+') {
+            ++pos;
+        }
+
+        bool dotFlag = false;
+        for (; pos < literal.length(); ++pos) {
+            if (literal[pos] == '.') {
+                if (dotFlag) {
+                    return false;  // 소수점이 두 번 이상 등장하면 유효하지 않음
+                }
+                dotFlag = true;
+            } else if (!std::isdigit(literal[pos])) {
+                return false;  // 숫자나 소수점이 아닌 문자가 등장하면 유효하지 않음
+            } else if (literal[literal.length() - 1] == '.')
+                return false;
+        }
+        return true;  // 모든 조건을 만족하면 유효한 입력
+    }
+
+void ScalarConverter::convert(const std::string& literal) {
     char c;
     int i;
     float f;
@@ -20,6 +43,8 @@ void ScalarConverter::convert(std::string& literal) {
     bool floatImpossible = false;
     bool doubleImpossible = false;
 	
+    if (isValidInput(literal) == false)
+        throw "Invalid literal input.";
     if (literal == "-inff" || literal == "+inff" || literal == "nanf") {
         charImpossible = true;
         intImpossible = true;
