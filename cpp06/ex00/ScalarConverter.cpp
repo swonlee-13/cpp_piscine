@@ -109,7 +109,7 @@ void ScalarConverter::convert(const std::string& literal) {
         }
 
         if (!intImpossible && !floatImpossible && !doubleImpossible) {
-            charImpossible = std::isprint(static_cast<char>(i)) == 0;
+            charImpossible = (!std::isprint(i));
         }
     }
 
