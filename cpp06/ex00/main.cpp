@@ -11,6 +11,5 @@ int main(int ac, char* av[]) {
     } catch (const char * e) {
         std::cout << e << std::endl;
     }
-
     return 0;
 }

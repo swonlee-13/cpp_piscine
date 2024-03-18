@@ -12,7 +12,8 @@ bool ScalarConverter::isValidInput(const std::string &literal) {
         if (literal.length() == 1 && !std::isdigit(literal[0])) {
             return true;
         }
-
+        if (literal == "-inff" || literal == "+inff" || literal == "nanf" || literal == "-inf" || literal == "+inf" || literal == "nan")
+            return true;
         size_t pos = 0;
         if (literal[pos] == '-' || literal[pos] == '+') {
             ++pos;
@@ -22,15 +23,15 @@ bool ScalarConverter::isValidInput(const std::string &literal) {
         for (; pos < literal.length(); ++pos) {
             if (literal[pos] == '.') {
                 if (dotFlag) {
-                    return false;  // 소수점이 두 번 이상 등장하면 유효하지 않음
+                    return false;
                 }
                 dotFlag = true;
             } else if (!std::isdigit(literal[pos])) {
-                return false;  // 숫자나 소수점이 아닌 문자가 등장하면 유효하지 않음
+                return false;
             } else if (literal[literal.length() - 1] == '.')
                 return false;
         }
-        return true;  // 모든 조건을 만족하면 유효한 입력
+        return true;
     }
 
 void ScalarConverter::convert(const std::string& literal) {
