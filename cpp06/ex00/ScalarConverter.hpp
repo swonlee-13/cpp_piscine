@@ -9,8 +9,9 @@ class ScalarConverter
 		ScalarConverter();
 		ScalarConverter(const ScalarConverter &Copy);
 		ScalarConverter &operator=(const ScalarConverter &Copy);
-	public:
+		static bool isValidInput(const std::string &param);
 		~ScalarConverter();
-		static void convert(std::string param);
+	public:
+		static void convert(const std::string &param);
 };
 #endif
