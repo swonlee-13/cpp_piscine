@@ -2,7 +2,6 @@
 # define ARRAY_HPP
 # include <cstdlib>
 # include <cstring>
-# include <exception>
 # include <stdexcept>
 
 template <typename T>
@@ -18,7 +17,8 @@ class Array
 		Array &operator=(const Array &Copy);
 		~Array();
 
-		T &operator[](int idx);
+		T &operator[](unsigned int idx);
+		const T &operator[](unsigned int idx) const;
 		unsigned int size() const;
 };
 

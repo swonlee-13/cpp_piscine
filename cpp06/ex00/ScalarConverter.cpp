@@ -1,11 +1,5 @@
 #include "ScalarConverter.hpp"
 
-ScalarConverter::ScalarConverter() {}
-
-ScalarConverter::ScalarConverter(const ScalarConverter &Copy) {(void)Copy;}
-
-ScalarConverter &ScalarConverter::operator=(const ScalarConverter &Copy) {(void)Copy; return *this;}
-
 ScalarConverter::~ScalarConverter() {}
 
 bool ScalarConverter::isValidInput(const std::string &literal) {

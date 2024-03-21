@@ -29,8 +29,15 @@ Array<T>::~Array() {
 }
 
 template <typename T>
-T &Array<T>::operator[](int idx) {
-	if (idx < 0 || idx >= _length)
+T &Array<T>::operator[](unsigned int idx) {
+	if (idx >= _length)
+		throw std::out_of_range("Index is out of range");
+	return _array[idx];
+}
+
+template <typename T>
+const T &Array<T>::operator[](unsigned int idx) const{
+	if (idx >= _length)
 		throw std::out_of_range("Index is out of range");
 	return _array[idx];
 }
