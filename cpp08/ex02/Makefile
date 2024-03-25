@@ -1,8 +1,8 @@
 CC = c++
 CFLAGS = -Wall -Wextra -Werror -std=c++98
-NAME = easyfind
+NAME = MutantStack
 
-SRCS = main.cpp   
+SRCS = main.cpp
 
 OBJS = $(SRCS:.cpp=.o)
 
