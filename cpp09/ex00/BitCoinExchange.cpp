@@ -5,15 +5,19 @@ BitCoinExchange::BitCoinExchange() {}
 
 BitCoinExchange::~BitCoinExchange() {}
 
-std::pair<int, double> BitCoinExchange::parseData(std::string &date) const {
-	std::stringstream ss(date);
+std::pair<int, double> BitCoinExchange::parseData(std::string &line) const {
+	std::stringstream ss(line);
 	std::string tmp;
 
 	int year, month, day, rawData;
-	char empty[3];
+	char empty;
 	double value;
+	std::string trash;
+	std::string trash2;
 
-	ss >> year >> empty[0] >> month >> empty[0] >> day >> empty >> value;
+	ss >> year >> empty >> month >> empty >> day >> trash >> value >> trash2;
+	if (trash != "|" || !trash2.empty())
+		throw std::invalid_argument("Error: bad input =>" + line);
 	rawData = year * 10000 + month * 100 + day;
 
 	if (value > 1000)
@@ -22,13 +26,13 @@ std::pair<int, double> BitCoinExchange::parseData(std::string &date) const {
 		throw std::invalid_argument("Error: not a positive number.");
 
 	if (rawData < _priceData.begin()->first  || month > 12)
-	throw std::invalid_argument("Error: bad input => " + date);
+	throw std::invalid_argument("Error: bad input => " + line);
 
 	int monthtable[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 	if (!(year % 400 != 0 && year % 100 == 0) && year % 4 == 0)
 		++monthtable[1];
 	if (day > monthtable[month - 1])
-		throw std::invalid_argument("Error: bad input =>" + date);
+		throw std::invalid_argument("Error: bad input =>" + line);
 	return (std::pair<int, double>(rawData, value));
 }
 
