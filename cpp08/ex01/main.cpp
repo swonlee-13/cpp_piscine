@@ -29,12 +29,13 @@ int main()
 
 		int data1 = B.longestSpan();
 		int data2 = B.shortestSpan();
-		std::cout << "AlongestSpan: " << dataA1 << std::endl;
-		std::cout << "AshortestSpan: " << dataA2 << std::endl << std::endl;
+		std::cout << "A longestSpan: " << dataA1 << std::endl;
+		std::cout << "A shortestSpan: " << dataA2 << std::endl << std::endl;
 
-		std::cout << "BlongestSpan: " << data1 << std::endl;
-		std::cout << "BshortestSpan: " << data2 << std::endl;
+		std::cout << "B longestSpan: " << data1 << std::endl;
+		std::cout << "B shortestSpan: " << data2 << std::endl;
 	}
+	
 	{
 		std::cout << std::endl <<  "====================" << std::endl << "test for multi add" << std::endl << std::endl;
 
