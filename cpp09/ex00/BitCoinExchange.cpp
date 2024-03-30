@@ -7,11 +7,11 @@ BitCoinExchange::~BitCoinExchange() {}
 
 std::pair<int, double> BitCoinExchange::parseData(std::string &line) const {
 	std::stringstream ss(line);
-	std::string tmp;
 
 	int year, month, day, rawData;
-	char empty;
 	double value;
+
+	char empty;
 	std::string trash;
 	std::string trash2;
 
