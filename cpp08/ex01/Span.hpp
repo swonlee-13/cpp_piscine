@@ -3,13 +3,17 @@
 # include <cstddef>
 # include <algorithm>
 # include <exception>
+# include <vector>
+# include <iostream>
+# include <numeric>
+# include <cstdlib>
 
 class Span
 {
 	private:
 		unsigned int _n;
-		int *_array;
-		unsigned int _numberOfDatas;
+		std::vector<int> _vector;
+		unsigned int _currentNumberOfData;
 	public:
 		Span();
 		Span(unsigned int n);
@@ -17,8 +21,13 @@ class Span
 		Span &operator=(const Span &Copy);
 		~Span();
 
+		typedef std::vector<int>::iterator	iterator_t;
+
 		void addNumber(int data);
-		int shortestSpan();
-		int longestSpan();
+		void addNumber(iterator_t begin, iterator_t end);
+		size_t shortestSpan();
+		size_t longestSpan();
+
+		static size_t abs_diff(int a, int b);
 };
 #endif

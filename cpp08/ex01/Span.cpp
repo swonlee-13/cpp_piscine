@@ -1,52 +1,62 @@
 #include "Span.hpp"
 
-Span::Span() : _n(0), _array(NULL), _numberOfDatas(0) {}
+Span::Span() : _n(0), _vector(), _currentNumberOfData(0){}
 
-Span::Span(unsigned int n) : _n(n), _array(new int[n]), _numberOfDatas(0) {}
+Span::Span(unsigned int n) : _n(n), _vector(n), _currentNumberOfData(0) {}
 
-Span::Span(const Span &Copy) : _n(Copy._n), _numberOfDatas(Copy._numberOfDatas) {
-	_array = new int[_n];
-	std::copy(Copy._array, Copy._array + _n, _array);
+Span::Span(const Span &Copy) {
+	*this = Copy;
 }
 
 Span &Span::operator=(const Span &Copy) {
 	if (this != &Copy) {
 		_n = Copy._n;
-		_numberOfDatas = Copy._numberOfDatas;
-		delete[] _array;
-		_array = new int[_n];
-		std::copy(Copy._array, Copy._array + _n, _array);
+		_vector = Copy._vector;
+		_currentNumberOfData = Copy._currentNumberOfData;
 	}
 	return *this;
 }
 
-Span::~Span() {
-	delete[] _array;
-}
+Span::~Span() {}
 
 void Span::addNumber(int data) {
-	if (_n == 0 || _numberOfDatas == _n)
-		throw std::out_of_range("Not enough space.");
-	_array[_numberOfDatas] = data;
-	++_numberOfDatas;
+	if (_currentNumberOfData < _n) {
+		_vector[_currentNumberOfData] = data;
+		_currentNumberOfData++;
+	}
+	else
+		throw std::invalid_argument("Error: Array is full.");
 }
 
-int Span::longestSpan() {
-	if (_numberOfDatas == 0 || _numberOfDatas == 1)
-		throw std::range_error("Not enough elements.");
-	int max = *std::max_element(_array, _array + _numberOfDatas - 1);
-	int min = *std::min_element(_array, _array + _numberOfDatas - 1);
+void Span::addNumber(iterator_t begin, iterator_t end) {
+	try {
+		for(iterator_t it = begin; it != end; it++)
+			addNumber(*it);
+	}
+	catch (std::exception &e) {
+		std::cerr << e.what() << std::endl;
+	}
+}
+
+size_t Span::longestSpan() {
+	size_t max = static_cast<size_t>(*(std::max_element(_vector.begin(), _vector.end())));
+	size_t min = static_cast<size_t>(*(std::min_element(_vector.begin(), _vector.end())));
 	return (max - min);
 }
-int Span::shortestSpan() {
-	if (_numberOfDatas == 0 || _numberOfDatas == 1)
-		throw std::range_error("Not enough elements.");
-	int *copy = new int[_n];
-	copy = std::copy(_array, _array + _n, copy);
-	std::sort(copy, copy + _numberOfDatas - 1);
-	int res = copy[1] = copy[0];
-	for (unsigned int i = 0; i < _numberOfDatas - 1; i++)
-		if (copy[i + 1] - copy[i] < res)
-			res = copy[i + 1] - copy[1];
-	return res;
+
+size_t Span::shortestSpan() {
+	std::vector<int> copy;
+	copy = _vector;
+	std::sort(copy.begin(), copy.end());
+	// for (std::vector<int>::iterator it = copy.begin(); it != copy.end(); ++it) {
+    // 	int element = *it;
+	// 	std::cout << element << "@" << std::endl;
+	// }	
+	std::adjacent_difference(copy.begin(), copy.end(), copy.begin(), Span::abs_diff);
+	
+	return (*std::min_element(copy.begin() + 1, copy.end()));
+}
+
+size_t Span::abs_diff(int a, int b){
+	return (static_cast<size_t>(std::abs(a - b)));
 }
