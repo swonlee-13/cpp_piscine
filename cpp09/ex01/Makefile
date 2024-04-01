@@ -1,8 +1,8 @@
 CC = c++
-CFLAGS = -Wall -Wextra -Werror -std=c++98
-NAME = btc
+CFLAGS = -Wall -Wextra -Werror -std=c++98 -g3
+NAME = RPN
 
-SRCS = BitCoinExchange.cpp main.cpp    
+SRCS = RPN.cpp main.cpp     
 
 OBJS = $(SRCS:.cpp=.o)
 
