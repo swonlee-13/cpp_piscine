@@ -14,13 +14,14 @@ class RPN
 		RPN(const RPN &Copy);
 		RPN &operator=(const RPN &Copy);
 
+	protected:
+		void calculateElements(char op);
+	
 	public:
 		RPN(const char *argument);
 		~RPN();
-
 		static bool isStrValid(const char *argument);
 		void calculateRPN();
-		void calculateElements(char op);
 		void printResult();
 };
 
