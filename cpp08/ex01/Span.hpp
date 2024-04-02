@@ -14,6 +14,10 @@ class Span
 		unsigned int _n;
 		std::vector<int> _vector;
 		unsigned int _currentNumberOfData;
+	
+	protected:
+		static size_t abs_diff(int a, int b);
+		
 	public:
 		Span();
 		Span(unsigned int n);
@@ -28,6 +32,5 @@ class Span
 		size_t shortestSpan();
 		size_t longestSpan();
 
-		static size_t abs_diff(int a, int b);
 };
 #endif
