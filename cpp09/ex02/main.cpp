@@ -1,6 +1,8 @@
 #include <iostream>
+#include "PmergeMe.hpp"
 
-int main()
+int main(int ac, char **av)
 {
-	
+	PmergeMe A(ac, av);
+    
 }
