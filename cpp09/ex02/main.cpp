@@ -6,5 +6,6 @@
 int main(int ac, char **av)
 {
 	PmergeMe A(ac, av);
-    
+    A.mergeInsertionSort();
+	A.printResult();
 }

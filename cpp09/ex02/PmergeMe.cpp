@@ -53,9 +53,11 @@ size_t PmergeMe::jacobsthal[53] = {	1u,
 									1501199875790165u,
 									3002399751580331u };
 
-PmergeMe::PmergeMe(int ac, char **av) : swapCount(0)
+//	std::cout << __FILE__ << ":" << __LINE__ << std::endl;
+
+PmergeMe::PmergeMe(int ac, char **av)
 {
-	for (std::size_t i = 0; i < ac; i++)
+	for (int i = 1; i < ac; i++)
 	{
 		_vectorToSort.push_back(std::atoi(av[i]));
 		_listToSort.push_back(std::atoi(av[i]));
@@ -68,23 +70,24 @@ PmergeMe::PmergeMe(const PmergeMe &Copy)
 	this->_vectorSorted = Copy._vectorSorted;
 	this->_listToSort = Copy._listToSort;
 	this->_listSorted = Copy._listSorted;
-	this->swapCount = Copy.swapCount;
 }
 
 PmergeMe &PmergeMe::operator=(const PmergeMe &Copy)
 {
-	this->_vectorToSort = Copy._vectorToSort;
-	this->_vectorSorted = Copy._vectorSorted;
-	this->_listToSort = Copy._listToSort;
-	this->_listSorted = Copy._listSorted;
-	this->swapCount =Copy.swapCount;
+	if (this != &Copy) {
+		this->_vectorToSort = Copy._vectorToSort;
+		this->_vectorSorted = Copy._vectorSorted;
+		this->_listToSort = Copy._listToSort;
+		this->_listSorted = Copy._listSorted;
+	}
+	return *this;
 }
 
 PmergeMe::~PmergeMe() {}
 
-void PmergeMe::arrangePair(std::vector<std::pair<unsigned int, unsigned int>> &pairs)
+void PmergeMe::arrangePair(std::vector<std::pair<unsigned int, unsigned int> > &pairs)
 {
-	std::vector<std::pair<unsigned int, unsigned int>>::iterator it;
+	std::vector<std::pair<unsigned int, unsigned int> >::iterator it;
 	for (it = pairs.begin(); it != pairs.end(); it++) {
 		if ((*it).first < (*it).second) {
 			unsigned int temp = (*it).first;
@@ -94,43 +97,107 @@ void PmergeMe::arrangePair(std::vector<std::pair<unsigned int, unsigned int>> &p
 	}
 }
 //pair 의 first 가 큰 수로 갔음 헷갈리기 ㄴㄴ ;;
-void PmergeMe::mergeInsertionSort(std::vector<unsigned int> &param)
+void PmergeMe::mergeInsertionStart(std::vector<unsigned int> &param)
 {
-	std::vector<std::pair<unsigned int, unsigned int>> pairs;
+	std::vector<std::pair<unsigned int, unsigned int> > pairs;
 	std::vector<unsigned int> large;
-	std::pair<unsigned int, unsigned int> numPair;
+	vec_it itToInsert, start, end;
 	bool			oddFlag = (param.size() % 2 == 0) ? false : true;
-	unsigned int	remainingNumber;
+	unsigned int	remainingNumber = oddFlag ? param.back() : 0;
 
-	if (param.size() == 1) {
-		_vectorSorted.push_back(param.front());
+	if (param.size() < 2) {
+		_vectorSorted.push_back(param[0]);
 		return ;
 	}
-	for (std::size_t i = 0; i < param.size(); i += 2)
-		pairs.push_back(std::make_pair(param[i], param[i + 1]));
-	if (oddFlag)
-		remainingNumber = param.back();
+	for (std::size_t i = 0; i < param.size(); i += 2) {
+		if (!(oddFlag && i == param.size() - 1))
+			pairs.push_back(std::make_pair(param[i], param[i + 1]));
+	}
 	arrangePair(pairs);
 	for (std::size_t i = 0; i < pairs.size(); i++)
 		large.push_back(pairs[i].first);
-	mergeInsertionSort(large);
+	mergeInsertionStart(large);
 	for (std::size_t i = 1; jacobsthal[i] > _vectorSorted.size(); i++) {
-		vec_it start = getIterator(_vectorSorted, jacobsthal[i - 1]);
-		vec_it end = (jacobsthal[i] > _vectorSorted.size()) ? getIterator(_vectorSorted, _vectorSorted.size()) : getIterator(_vectorSorted, jacobsthal[i]);
-
+		start = getIterator(_vectorSorted, jacobsthal[i - 1]);
+		end = (jacobsthal[i] > _vectorSorted.size()) ? getIterator(_vectorSorted, _vectorSorted.size()) : getIterator(_vectorSorted, jacobsthal[i]);
+		if (oddFlag && end == _vectorSorted.end() - 1) {
+			itToInsert = std::lower_bound(_vectorSorted.begin(), _vectorSorted.end(), remainingNumber);
+			_vectorSorted.insert(itToInsert, remainingNumber);
+		}
 		for (vec_it it = end; it != start; it--) {
-			pvec_it pit = std::lower_bound(pairs.begin(), pairs.end(), *it);
+			pvec_it pit = findPairByLarge(pairs, *it);
 			unsigned int numToInsert = pit->second;
-			vec_it itToInsert= std::lower_bound(_vectorSorted.begin(), _vectorSorted.end(), numToInsert);
-			
+			itToInsert = std::lower_bound(_vectorSorted.begin(), _vectorSorted.end(), numToInsert);
+			_vectorSorted.insert(itToInsert, numToInsert);
+			pairs.erase(pit);
 		}
 	}
 }
 
-vec_it PmergeMe::getIterator(std::vector<unsigned int> &param, std::size_t jacobNum) {
+void PmergeMe::mergeInsertionSort() {
+	mergeInsertionStart(_vectorToSort);
+}
+
+vec_it PmergeMe::getIterator(std::vector<unsigned int> &param, std::size_t jacobNum)
+{
 	vec_it ret = param.begin();
-	for (int i = 0; i < jacobNum; i++) {
+	for (std::size_t i = 0; i < jacobNum && ret != param.end(); i++) {
 		++ret;
 	}
 	return ret;
+}
+
+pvec_it PmergeMe::findPairByLarge(std::vector<std::pair<unsigned int, unsigned int> >&pairs, unsigned int largeNum)
+{
+	for (pvec_it pit =  pairs.begin(); pit != pairs.end(); pit++) {
+		if (pit->first == largeNum) {
+			return pit;
+		}
+	}
+	return pairs.end();
+}
+
+const std::vector<unsigned int> &PmergeMe::getVectorToSort() const {return _vectorToSort;}
+
+const std::list<unsigned int> &PmergeMe::getListToSort() const {return _listToSort;}
+
+void PmergeMe::printResult()
+{
+	printBefore();
+	printAfter();
+	printTimeWithVector();
+	printTimeWithList();
+}
+
+void	PmergeMe::printBefore()
+{
+	std::cout << "Before:   ";
+	for (std::size_t i = 0; i < _vectorToSort.size(); i++) {
+		std::cout << _vectorToSort[i];
+		if (i != _vectorToSort.size() - 1)
+			std::cout << " ";
+	}
+	std::cout << std::endl;
+}
+
+
+void	PmergeMe::printAfter()
+{
+	std::cout << "After:    ";
+	for (std::size_t i = 0; i < _vectorSorted.size(); i++) {
+		std::cout << _vectorSorted[i];
+		if (i != _vectorSorted.size() - 1)
+			std::cout << " ";
+	}
+	std::cout << std::endl;
+}
+
+void PmergeMe::printTimeWithVector()
+{
+	std::cout << "time here" << std::endl;
+}
+
+void PmergeMe::printTimeWithList()
+{
+	std::cout << "time here" << std::endl;
 }
