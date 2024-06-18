@@ -53,7 +53,7 @@ size_t PmergeMe::jacobsthal[53] = {	1u,
 									1501199875790165u,
 									3002399751580331u };
 
-//	std::cout << __FILE__ << ":" << __LINE__ << std::endl;
+	//std::cout << __FILE__ << ":" << __LINE__ << std::endl;
 
 PmergeMe::PmergeMe(int ac, char **av)
 {
@@ -117,14 +117,28 @@ void PmergeMe::mergeInsertionStart(std::vector<unsigned int> &param)
 	for (std::size_t i = 0; i < pairs.size(); i++)
 		large.push_back(pairs[i].first);
 	mergeInsertionStart(large);
-	for (std::size_t i = 1; jacobsthal[i] > _vectorSorted.size(); i++) {
+	for (std::size_t i = 1; jacobsthal[i - 1] <= _vectorSorted.size(); i++) {
+	std::cout << __FILE__ << ":" << __LINE__ << " | " <<  jacobsthal[i] << std::endl;
+
+		if (i - 1 == 0) {
+			pvec_it pit = findPairByLarge(pairs, *_vectorSorted.begin());
+			std::cout << pit->first << " | " << pit->second << std::endl;
+			unsigned int numToInsert = pit->second;
+			_vectorSorted.insert(_vectorSorted.begin(), numToInsert);
+			printVector(_vectorSorted);
+			continue;
+		}
 		start = getIterator(_vectorSorted, jacobsthal[i - 1]);
 		end = (jacobsthal[i] > _vectorSorted.size()) ? getIterator(_vectorSorted, _vectorSorted.size()) : getIterator(_vectorSorted, jacobsthal[i]);
 		if (oddFlag && end == _vectorSorted.end() - 1) {
+	std::cout << __FILE__ << ":" << __LINE__ << std::endl;
+			
 			itToInsert = std::lower_bound(_vectorSorted.begin(), _vectorSorted.end(), remainingNumber);
 			_vectorSorted.insert(itToInsert, remainingNumber);
 		}
-		for (vec_it it = end; it != start; it--) {
+		for (vec_it it = end; it != start; it--) { 
+	std::cout << __FILE__ << ":" << __LINE__ << std::endl;
+			
 			pvec_it pit = findPairByLarge(pairs, *it);
 			unsigned int numToInsert = pit->second;
 			itToInsert = std::lower_bound(_vectorSorted.begin(), _vectorSorted.end(), numToInsert);
@@ -154,6 +168,8 @@ pvec_it PmergeMe::findPairByLarge(std::vector<std::pair<unsigned int, unsigned i
 			return pit;
 		}
 	}
+	std::cerr << "end!!!!!!!" << std::endl;
+	throw std::runtime_error("babo");
 	return pairs.end();
 }
 
