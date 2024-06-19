@@ -36,6 +36,8 @@ protected:
 
 	/* #endregion */
 
+	//for evaluation
+	void printVector(const char * message, std::vector<unsigned int> &param);
 
 public:
 	/* #region OCCF */
@@ -52,25 +54,7 @@ public:
 	void printResult();
 	
 	/* #endregion */
-
-	const std::vector<unsigned int> &getVectorToSort() const;
-	const std::list<unsigned int> &getListToSort() const;
-
-	void printVector(std::vector<unsigned int> &param) {
-		std::cout << "--------------printing | ";
-		for (std::size_t i = 0; i < param.size() ; i++) {
-			std::cout << param[i] << " ";
-		}
-		std::cout << std::endl;
-	}
 	
-	void printVector(const char * message, std::vector<unsigned int> &param) {
-		std::cout << "--------------" << message << " | ";
-		for (std::size_t i = 0; i < param.size() ; i++) {
-			std::cout << param[i] << " ";
-		}
-		std::cout << std::endl;
-	}
 };
 
 inline bool operator<(const std::pair<const unsigned int, const unsigned int> &lft, const std::pair<const unsigned int, const unsigned int> &rgt)

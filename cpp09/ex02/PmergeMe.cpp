@@ -132,7 +132,6 @@ void PmergeMe::mergeInsertionStart(std::vector<unsigned int> &param)
 	for (std::size_t i = 0; i == 0 || jacobsthal[i - 1] < small.size(); i++) {
 		if (i == 0) {
 			_vectorSorted.insert(_vectorSorted.begin(), small[0]);
-			printVector(_vectorSorted);
 			continue;
 		}
 		std::size_t start = jacobsthal[i - 1] - 1;
@@ -140,7 +139,6 @@ void PmergeMe::mergeInsertionStart(std::vector<unsigned int> &param)
 		for (std::size_t i = end; i != start; i--) {
 			vec_it itToInsert = std::lower_bound(_vectorSorted.begin(), _vectorSorted.end(), small[i]);
 			_vectorSorted.insert(itToInsert, small[i]);
-			printVector(_vectorSorted);
 		}
 	}
 }
@@ -159,9 +157,13 @@ pvec_it PmergeMe::findPairByLarge(std::vector<std::pair<unsigned int, unsigned i
 	return pairs.end();
 }
 
-const std::vector<unsigned int> &PmergeMe::getVectorToSort() const {return _vectorToSort;}
-
-const std::list<unsigned int> &PmergeMe::getListToSort() const {return _listToSort;}
+void PmergeMe::printVector(const char * message, std::vector<unsigned int> &param) {
+	std::cout << "--------------" << message << " | ";
+	for (std::size_t i = 0; i < param.size() ; i++) {
+		std::cout << param[i] << " ";
+	}
+	std::cout << std::endl;
+}
 
 void PmergeMe::printResult()
 {
