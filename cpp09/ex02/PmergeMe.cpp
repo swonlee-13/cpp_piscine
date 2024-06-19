@@ -101,7 +101,6 @@ void PmergeMe::makeSmallVector(std::vector<unsigned int> &large, std::vector<uns
 		pvec_it pit = findPairByLarge(pairs, *it);
 		unsigned int smallNum = pit->second;
 		small.push_back(smallNum);
-		pairs.erase(pit);
 	}
 	if (flag)
 		small.push_back(remainingNumber);
@@ -159,6 +158,17 @@ pvec_it PmergeMe::findPairByLarge(std::vector<std::pair<unsigned int, unsigned i
 {
 	for (pvec_it pit =  pairs.begin(); pit != pairs.end(); pit++) {
 		if (pit->first == largeNum) {
+			return pit;
+		}
+	}
+	return pairs.end();
+}
+
+
+pvec_it PmergeMe::findPairBySmall(std::vector<std::pair<unsigned int, unsigned int> > &pairs, unsigned int smallNum)
+{
+	for (pvec_it pit =  pairs.begin(); pit != pairs.end(); pit++) {
+		if (pit->second == smallNum) {
 			return pit;
 		}
 	}
