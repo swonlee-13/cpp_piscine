@@ -53,6 +53,7 @@ size_t PmergeMe::jacobsthal[53] = {	1u,
 									1501199875790165u,
 									3002399751580331u };
 
+	//std::cout << __FILE__ << ":" << __LINE__ << std::endl;
 
 PmergeMe::PmergeMe(int ac, char **av)
 {
@@ -96,7 +97,7 @@ void PmergeMe::arrangePair(std::vector<std::pair<unsigned int, unsigned int> > &
 	}
 }
 
-void PmergeMe::makeSmallVector(std::vector<unsigned int> &large, std::vector<unsigned int> &small, std::vector<std::pair<unsigned int, unsigned int> > &pairs)
+void PmergeMe::makeSmallVector(std::vector<unsigned int> &large, std::vector<unsigned int> &small, std::vector<std::pair<unsigned int, unsigned int> > &pairs, bool flag, unsigned int remainingNumber)
 {
 	for (vec_it it = large.begin(); it != large.end(); it++) {
 		pvec_it pit = findPairByLarge(pairs, *it);
@@ -104,23 +105,14 @@ void PmergeMe::makeSmallVector(std::vector<unsigned int> &large, std::vector<uns
 		small.push_back(smallNum);
 		pairs.erase(pit);
 	}
+	if (flag)
+		small.push_back(remainingNumber);
 }
-
-pvec_it PmergeMe::findPairByLarge(std::vector<std::pair<unsigned int, unsigned int> > &pairs, unsigned int largeNum)
-{
-	for (pvec_it pit =  pairs.begin(); pit != pairs.end(); pit++) {
-		if (pit->first == largeNum) {
-			return pit;
-		}
-	}
-	return pairs.end();
-}
-
+//pair 의 first 가 큰 수로 갔음 헷갈리기 ㄴㄴ ;;
 void PmergeMe::mergeInsertionStart(std::vector<unsigned int> &param)
 {
 	std::vector<std::pair<unsigned int, unsigned int> > pairs;
 	std::vector<unsigned int> large, small;
-	vec_it itToInsert;
 	bool			oddFlag = (param.size() % 2 == 0) ? false : true;
 	unsigned int	remainingNumber = oddFlag ? param.back() : 0;
 
@@ -136,26 +128,64 @@ void PmergeMe::mergeInsertionStart(std::vector<unsigned int> &param)
 	for (std::size_t i = 0; i < pairs.size(); i++)
 		large.push_back(pairs[i].first);
 	mergeInsertionStart(large);
-	makeSmallVector(large, small, pairs);
-	if (oddFlag)
-		small.push_back(remainingNumber);
+	makeSmallVector(_vectorSorted, small, pairs, oddFlag, remainingNumber);
+
+	printVector("large", large);
+	printVector("small", small);
+	std::cout << "end merge | current vector length == "<< _vectorSorted.size() << std::endl;
 	for (std::size_t i = 0; i == 0 || jacobsthal[i - 1] < small.size(); i++) {
+		std::cout << "i = " << i << std::endl;
 		if (i == 0) {
+			std::cout << "just insert" << std::endl;
 			_vectorSorted.insert(_vectorSorted.begin(), small[0]);
+			printVector(_vectorSorted);
 			continue;
 		}
 		std::size_t start = jacobsthal[i - 1] - 1;
 		std::size_t end = (jacobsthal[i] > small.size()) ? small.size() - 1 : jacobsthal[i] - 1;
+
+		std::cout << "jacob[i - 1] = " << jacobsthal[i - 1] << std::endl;
+		std::cout << "jacob[i] = " << jacobsthal[i] << ", end = "<< end << std::endl;
+		
 		for (std::size_t i = end; i != start; i--) {
-			itToInsert = std::lower_bound(_vectorSorted.begin(), _vectorSorted.end(), small[i]);
+			std::cout << "normal insert" << std::endl;
+			vec_it itToInsert = std::lower_bound(_vectorSorted.begin(), _vectorSorted.end(), small[i]);
 			_vectorSorted.insert(itToInsert, small[i]);
+			printVector(_vectorSorted);
 		}
 	}
+	std::cout << "end recursion" << std::endl << std::endl;
 }
 
 void PmergeMe::mergeInsertionSort() {
 	mergeInsertionStart(_vectorToSort);
+	std::cout << "Sort finished" << std::endl;
 }
+
+// vec_it PmergeMe::getIterator(std::vector<unsigned int> &param, std::size_t jacobNum)
+// {
+// 	vec_it ret = param.begin();
+// 	for (std::size_t i = 0; i < jacobNum && ret != param.end(); i++)
+// 		++ret;
+// 	if (ret == param.end())
+// 		return ret - 1;
+// 	else
+// 		return ret;
+// }
+
+pvec_it PmergeMe::findPairByLarge(std::vector<std::pair<unsigned int, unsigned int> > &pairs, unsigned int largeNum)
+{
+	for (pvec_it pit =  pairs.begin(); pit != pairs.end(); pit++) {
+		if (pit->first == largeNum) {
+			return pit;
+		}
+	}
+	return pairs.end();
+}
+
+const std::vector<unsigned int> &PmergeMe::getVectorToSort() const {return _vectorToSort;}
+
+const std::list<unsigned int> &PmergeMe::getListToSort() const {return _listToSort;}
 
 void PmergeMe::printResult()
 {

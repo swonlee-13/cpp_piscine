@@ -28,7 +28,7 @@ protected:
 	void arrangePair(std::vector<std::pair<unsigned int, unsigned int> > &pairs);
 	vec_it getIterator(std::vector<unsigned int> &param, std::size_t jacobNum); // overloading needed
 	pvec_it findPairByLarge(std::vector<std::pair<unsigned int, unsigned int> > &pairs, unsigned int largeNum);
-	void makeSmallVector(std::vector<unsigned int> &large, std::vector<unsigned int> &small, std::vector<std::pair<unsigned int, unsigned int> > &pairs);
+	void makeSmallVector(std::vector<unsigned int> &large, std::vector<unsigned int> &small, std::vector<std::pair<unsigned int, unsigned int> > &pairs, bool flag, unsigned int remainingNumber);
 	void printBefore();
 	void printAfter();
 	void printTimeWithVector();
@@ -52,6 +52,25 @@ public:
 	void printResult();
 	
 	/* #endregion */
+
+	const std::vector<unsigned int> &getVectorToSort() const;
+	const std::list<unsigned int> &getListToSort() const;
+
+	void printVector(std::vector<unsigned int> &param) {
+		std::cout << "--------------printing | ";
+		for (std::size_t i = 0; i < param.size() ; i++) {
+			std::cout << param[i] << " ";
+		}
+		std::cout << std::endl;
+	}
+	
+	void printVector(const char * message, std::vector<unsigned int> &param) {
+		std::cout << "--------------" << message << " | ";
+		for (std::size_t i = 0; i < param.size() ; i++) {
+			std::cout << param[i] << " ";
+		}
+		std::cout << std::endl;
+	}
 };
 
 inline bool operator<(const std::pair<const unsigned int, const unsigned int> &lft, const std::pair<const unsigned int, const unsigned int> &rgt)
