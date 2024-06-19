@@ -20,7 +20,7 @@ private:
 	std::vector<unsigned int> _vectorSorted;
 	std::list<unsigned int> _listToSort;
 	std::list<unsigned int> _listSorted;
-	static size_t jacobsthal[];
+	static size_t jacobsthal[53];
 	PmergeMe();
 
 protected:
