@@ -28,6 +28,7 @@ protected:
 	void arrangePair(std::vector<std::pair<unsigned int, unsigned int> > &pairs);
 	vec_it getIterator(std::vector<unsigned int> &param, std::size_t jacobNum); // overloading needed
 	pvec_it findPairByLarge(std::vector<std::pair<unsigned int, unsigned int> > &pairs, unsigned int largeNum);
+	void makeSmallVector(std::vector<unsigned int> &large, std::vector<unsigned int> &small, std::vector<std::pair<unsigned int, unsigned int> > &pairs);
 	void printBefore();
 	void printAfter();
 	void printTimeWithVector();
@@ -56,11 +57,11 @@ public:
 	const std::list<unsigned int> &getListToSort() const;
 
 	void printVector(std::vector<unsigned int> &param) {
-		std::cout << "===============printing===============" << std::endl;
+		std::cout << "--------------printing | ";
 		for (std::size_t i = 0; i < param.size() ; i++) {
 			std::cout << param[i] << " ";
 		}
-		std::cout << std::endl << "==================end=============" << std::endl;
+		std::cout << std::endl;
 	}
 };
 

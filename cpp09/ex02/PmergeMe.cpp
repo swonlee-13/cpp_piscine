@@ -96,14 +96,23 @@ void PmergeMe::arrangePair(std::vector<std::pair<unsigned int, unsigned int> > &
 		}
 	}
 }
+
+void PmergeMe::makeSmallVector(std::vector<unsigned int> &large, std::vector<unsigned int> &small, std::vector<std::pair<unsigned int, unsigned int> > &pairs)
+{
+	for (vec_it it = large.begin(); it != large.end(); it++) {
+		unsigned int smallNum = findPairByLarge(pairs, *it)->second;
+		small.push_back(smallNum);
+	}
+}
 //pair 의 first 가 큰 수로 갔음 헷갈리기 ㄴㄴ ;;
 void PmergeMe::mergeInsertionStart(std::vector<unsigned int> &param)
 {
 	std::vector<std::pair<unsigned int, unsigned int> > pairs;
-	std::vector<unsigned int> large;
+	std::vector<unsigned int> large, small;
 	vec_it itToInsert, start, end;
 	bool			oddFlag = (param.size() % 2 == 0) ? false : true;
 	unsigned int	remainingNumber = oddFlag ? param.back() : 0;
+	unsigned int numToInsert;
 
 	if (param.size() < 2) {
 		_vectorSorted.push_back(param[0]);
@@ -117,59 +126,68 @@ void PmergeMe::mergeInsertionStart(std::vector<unsigned int> &param)
 	for (std::size_t i = 0; i < pairs.size(); i++)
 		large.push_back(pairs[i].first);
 	mergeInsertionStart(large);
-	for (std::size_t i = 1; jacobsthal[i - 1] <= _vectorSorted.size(); i++) {
-	std::cout << __FILE__ << ":" << __LINE__ << " | " <<  jacobsthal[i] << std::endl;
-
-		if (i - 1 == 0) {
-			pvec_it pit = findPairByLarge(pairs, *_vectorSorted.begin());
-			std::cout << pit->first << " | " << pit->second << std::endl;
-			unsigned int numToInsert = pit->second;
-			_vectorSorted.insert(_vectorSorted.begin(), numToInsert);
+	makeSmallVector(large, small, pairs);
+	std::cout << "end merge | current large length == "<< large.size() << std::endl;
+	for (std::size_t i = 0; i == 0 || jacobsthal[i - 1] < small.size(); i++) {
+		std::cout << "i = " << i << std::endl;
+		if (i == 0) {
+			std::cout << "just insert" << std::endl;
+			_vectorSorted.insert(_vectorSorted.begin(), small[0]);
 			printVector(_vectorSorted);
 			continue;
 		}
-		start = getIterator(_vectorSorted, jacobsthal[i - 1]);
-		end = (jacobsthal[i] > _vectorSorted.size()) ? getIterator(_vectorSorted, _vectorSorted.size()) : getIterator(_vectorSorted, jacobsthal[i]);
-		if (oddFlag && end == _vectorSorted.end() - 1) {
-	std::cout << __FILE__ << ":" << __LINE__ << std::endl;
-			
+		start = getIterator(small, jacobsthal[i - 1]);
+		end = getIterator(small, jacobsthal[i]);
+
+		std::cout << "jacob[i - 1] = " << jacobsthal[i - 1] << std::endl;
+		std::cout << "jacob[i] = " << jacobsthal[i] << std::endl;
+		
+		if (oddFlag && end == small.end() - 1) {
+			std::cout << "odd num handling" << std::endl;
 			itToInsert = std::lower_bound(_vectorSorted.begin(), _vectorSorted.end(), remainingNumber);
 			_vectorSorted.insert(itToInsert, remainingNumber);
+			printVector(_vectorSorted);
+			oddFlag = false;
 		}
-		for (vec_it it = end; it != start; it--) { 
-	std::cout << __FILE__ << ":" << __LINE__ << std::endl;
-			
+		for (vec_it it = end; it != start; it--) {
 			pvec_it pit = findPairByLarge(pairs, *it);
+			if (pit == pairs.end())
+				continue;
+			std::cout << "normal insert" << std::endl;
 			unsigned int numToInsert = pit->second;
+			std::cout << "numToInsert = " << numToInsert << std::endl;
 			itToInsert = std::lower_bound(_vectorSorted.begin(), _vectorSorted.end(), numToInsert);
 			_vectorSorted.insert(itToInsert, numToInsert);
 			pairs.erase(pit);
+			printVector(_vectorSorted);
 		}
 	}
+	std::cout << "end recursion" << std::endl << std::endl;
 }
 
 void PmergeMe::mergeInsertionSort() {
 	mergeInsertionStart(_vectorToSort);
+	std::cout << "Sort finished" << std::endl;
 }
 
 vec_it PmergeMe::getIterator(std::vector<unsigned int> &param, std::size_t jacobNum)
 {
 	vec_it ret = param.begin();
-	for (std::size_t i = 0; i < jacobNum && ret != param.end(); i++) {
+	for (std::size_t i = 0; i < jacobNum && ret != param.end(); i++)
 		++ret;
-	}
-	return ret;
+	if (ret == param.end())
+		return ret - 1;
+	else
+		return ret;
 }
 
-pvec_it PmergeMe::findPairByLarge(std::vector<std::pair<unsigned int, unsigned int> >&pairs, unsigned int largeNum)
+pvec_it PmergeMe::findPairByLarge(std::vector<std::pair<unsigned int, unsigned int> > &pairs, unsigned int largeNum)
 {
 	for (pvec_it pit =  pairs.begin(); pit != pairs.end(); pit++) {
 		if (pit->first == largeNum) {
 			return pit;
 		}
 	}
-	std::cerr << "end!!!!!!!" << std::endl;
-	throw std::runtime_error("babo");
 	return pairs.end();
 }
 
