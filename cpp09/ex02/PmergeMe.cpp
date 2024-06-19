@@ -51,7 +51,8 @@ size_t PmergeMe::jacobsthal[53] = {	1u,
 									375299968947541u,
 									750599937895083u,
 									1501199875790165u,
-									3002399751580331u };
+									3002399751580331u
+};
 
 PmergeMe::PmergeMe(int ac, char **av)
 {
@@ -87,23 +88,34 @@ void PmergeMe::arrangePair(std::vector<std::pair<unsigned int, unsigned int> > &
 {
 	std::vector<std::pair<unsigned int, unsigned int> >::iterator it;
 	for (it = pairs.begin(); it != pairs.end(); it++) {
-		if ((*it).first < (*it).second) {
-			unsigned int temp = (*it).first;
-			(*it).first = (*it).second;
-			(*it).second = temp;
+		if (it->first < it->second) {
+			unsigned int temp = it->first;
+			it->first = it->second;
+			it->second = temp;
 		}
 	}
 }
 
-void PmergeMe::makeSmallVector(std::vector<unsigned int> &large, std::vector<unsigned int> &small, std::vector<std::pair<unsigned int, unsigned int> > &pairs, bool flag, unsigned int remainingNumber)
+void PmergeMe::makeSmallVector(std::vector<unsigned int> &sortedLarge, std::vector<unsigned int> &small, std::vector<std::pair<unsigned int, unsigned int> > &pairs, bool flag, unsigned int remainingNumber)
 {
-	for (vec_it it = large.begin(); it != large.end(); it++) {
+	for (vec_it it = sortedLarge.begin(); it != sortedLarge.end(); it++) {
 		pvec_it pit = findPairByLarge(pairs, *it);
 		unsigned int smallNum = pit->second;
 		small.push_back(smallNum);
+		pairs.erase(pit);
 	}
 	if (flag)
 		small.push_back(remainingNumber);
+}
+
+pvec_it PmergeMe::findPairByLarge(std::vector<std::pair<unsigned int, unsigned int> > &pairs, unsigned int largeNum)
+{
+	for (pvec_it pit =  pairs.begin(); pit != pairs.end(); pit++) {
+		if (pit->first == largeNum) {
+			return pit;
+		}
+	}
+	return pairs.end();
 }
 
 void PmergeMe::recursionStart(std::vector<unsigned int> &param)
@@ -135,83 +147,35 @@ void PmergeMe::recursionStart(std::vector<unsigned int> &param)
 		std::size_t start = jacobsthal[i - 1] - 1;
 		std::size_t end = (jacobsthal[i] > small.size()) ? small.size() - 1 : jacobsthal[i] - 1;
 		for (std::size_t j = end; j != start; j--) {
-			vec_it itEnd, itToInsert;
-			if (j == end && small.size() % 2 == 1) {
-				itEnd = _vectorSorted.end();
-			} else
-				itEnd = _vectorSorted.begin() + loopCount + j;
-			itToInsert = std::lower_bound(_vectorSorted.begin(), itEnd, small[j]);
+			vec_it itEnd = (j == end && small.size() % 2 == 1) ? _vectorSorted.end() : _vectorSorted.begin() + loopCount + j;
+			vec_it itToInsert = std::lower_bound(_vectorSorted.begin(), itEnd, small[j]);
 			_vectorSorted.insert(itToInsert, small[j]);
-			std::cout << "j | " << j << " | ";
-			std::cout << "length | " << _vectorSorted.size() << " | i = " << i << " | loop + j = " << loopCount + j << std::endl;
 			loopCount++;
 		}
 	}
-	std::cout << "finish recursion depth" << std::endl << std::endl;
 }
 
 void PmergeMe::mergeInsertionSort() {
+	timeStamp();
 	recursionStart(_vectorToSort);
 }
 
-pvec_it PmergeMe::findPairByLarge(std::vector<std::pair<unsigned int, unsigned int> > &pairs, unsigned int largeNum)
-{
-	for (pvec_it pit =  pairs.begin(); pit != pairs.end(); pit++) {
-		if (pit->first == largeNum) {
-			return pit;
-		}
-	}
-	return pairs.end();
-}
-
-
-pvec_it PmergeMe::findPairBySmall(std::vector<std::pair<unsigned int, unsigned int> > &pairs, unsigned int smallNum)
-{
-	for (pvec_it pit =  pairs.begin(); pit != pairs.end(); pit++) {
-		if (pit->second == smallNum) {
-			return pit;
-		}
-	}
-	return pairs.end();
-}
-
-void PmergeMe::printVector(const char * message, std::vector<unsigned int> &param) {
-	std::cout << "--------------" << message << " | ";
+void PmergeMe::printVector(const char *message, std::vector<unsigned int> &param) {
+	std::cout << message;
 	for (std::size_t i = 0; i < param.size() ; i++) {
-		std::cout << param[i] << " ";
-	}
-	std::cout << std::endl;
-}
-
-void PmergeMe::printResult()
-{
-	printBefore();
-	printAfter();
-	printTimeWithVector();
-	printTimeWithList();
-}
-
-void	PmergeMe::printBefore()
-{
-	std::cout << "Before:   ";
-	for (std::size_t i = 0; i < _vectorToSort.size(); i++) {
-		std::cout << _vectorToSort[i];
+		std::cout << param[i];
 		if (i != _vectorToSort.size() - 1)
 			std::cout << " ";
 	}
 	std::cout << std::endl;
 }
 
-
-void	PmergeMe::printAfter()
+void PmergeMe::printResult()
 {
-	std::cout << "After:    ";
-	for (std::size_t i = 0; i < _vectorSorted.size(); i++) {
-		std::cout << _vectorSorted[i];
-		if (i != _vectorSorted.size() - 1)
-			std::cout << " ";
-	}
-	std::cout << std::endl;
+	printVector("Before:   ", _vectorToSort);
+	printVector("After:    ", _vectorSorted);
+	printTimeWithVector();
+	printTimeWithList();
 }
 
 void PmergeMe::printTimeWithVector()

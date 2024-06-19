@@ -27,16 +27,12 @@ protected:
 	/* #region InternalMethods */
 	void arrangePair(std::vector<std::pair<unsigned int, unsigned int> > &pairs);
 	pvec_it findPairByLarge(std::vector<std::pair<unsigned int, unsigned int> > &pairs, unsigned int largeNum);
-	pvec_it findPairBySmall(std::vector<std::pair<unsigned int, unsigned int> > &pairs, unsigned int smallNum);
-	void makeSmallVector(std::vector<unsigned int> &large, std::vector<unsigned int> &small, std::vector<std::pair<unsigned int, unsigned int> > &pairs, bool flag, unsigned int remainingNumber);
-	void printBefore();
-	void printAfter();
+	void makeSmallVector(std::vector<unsigned int> &sortedLarge, std::vector<unsigned int> &small, std::vector<std::pair<unsigned int, unsigned int> > &pairs, bool flag, unsigned int remainingNumber);
 	void printTimeWithVector();
 	void printTimeWithList();
 
 	/* #endregion */
 
-	//for evaluation
 	void printVector(const char * message, std::vector<unsigned int> &param);
 
 public:
