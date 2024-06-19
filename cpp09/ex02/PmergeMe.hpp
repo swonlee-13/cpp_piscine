@@ -50,7 +50,7 @@ public:
 
 	/* #region  AvailableMethods */
 	void mergeInsertionSort();
-	void mergeInsertionStart(std::vector<unsigned int> &param);
+	void recursionStart(std::vector<unsigned int> &param);
 	void printResult();
 	
 	/* #endregion */

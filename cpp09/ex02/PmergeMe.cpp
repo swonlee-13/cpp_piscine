@@ -107,7 +107,7 @@ void PmergeMe::makeSmallVector(std::vector<unsigned int> &large, std::vector<uns
 		small.push_back(remainingNumber);
 }
 
-void PmergeMe::mergeInsertionStart(std::vector<unsigned int> &param)
+void PmergeMe::recursionStart(std::vector<unsigned int> &param)
 {
 	std::vector<std::pair<unsigned int, unsigned int> > pairs;
 	std::vector<unsigned int> large, small;
@@ -125,7 +125,7 @@ void PmergeMe::mergeInsertionStart(std::vector<unsigned int> &param)
 	arrangePair(pairs);
 	for (std::size_t i = 0; i < pairs.size(); i++)
 		large.push_back(pairs[i].first);
-	mergeInsertionStart(large);
+	recursionStart(large);
 	makeSmallVector(_vectorSorted, small, pairs, oddFlag, remainingNumber);
 	for (std::size_t i = 0; i == 0 || jacobsthal[i - 1] < small.size(); i++) {
 		if (i == 0) {
@@ -134,15 +134,15 @@ void PmergeMe::mergeInsertionStart(std::vector<unsigned int> &param)
 		}
 		std::size_t start = jacobsthal[i - 1] - 1;
 		std::size_t end = (jacobsthal[i] > small.size()) ? small.size() - 1 : jacobsthal[i] - 1;
-		for (std::size_t i = end; i != start; i--) {
-			vec_it itToInsert = std::lower_bound(_vectorSorted.begin(), _vectorSorted.end(), small[i]);
-			_vectorSorted.insert(itToInsert, small[i]);
+		for (std::size_t j = end; j != start; j--) {
+			vec_it itToInsert = std::lower_bound(_vectorSorted.begin(), _vectorSorted.begin() + std::pow(2, i) - 2, small[j]);
+			_vectorSorted.insert(itToInsert, small[j]);
 		}
 	}
 }
 
 void PmergeMe::mergeInsertionSort() {
-	mergeInsertionStart(_vectorToSort);
+	recursionStart(_vectorToSort);
 }
 
 pvec_it PmergeMe::findPairByLarge(std::vector<std::pair<unsigned int, unsigned int> > &pairs, unsigned int largeNum)
