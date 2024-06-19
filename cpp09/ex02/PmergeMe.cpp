@@ -53,8 +53,6 @@ size_t PmergeMe::jacobsthal[53] = {	1u,
 									1501199875790165u,
 									3002399751580331u };
 
-	//std::cout << __FILE__ << ":" << __LINE__ << std::endl;
-
 PmergeMe::PmergeMe(int ac, char **av)
 {
 	for (int i = 1; i < ac; i++)
