@@ -108,7 +108,7 @@ void PmergeMe::makeSmallVector(std::vector<unsigned int> &large, std::vector<uns
 	if (flag)
 		small.push_back(remainingNumber);
 }
-//pair 의 first 가 큰 수로 갔음 헷갈리기 ㄴㄴ ;;
+
 void PmergeMe::mergeInsertionStart(std::vector<unsigned int> &param)
 {
 	std::vector<std::pair<unsigned int, unsigned int> > pairs;
@@ -129,49 +129,25 @@ void PmergeMe::mergeInsertionStart(std::vector<unsigned int> &param)
 		large.push_back(pairs[i].first);
 	mergeInsertionStart(large);
 	makeSmallVector(_vectorSorted, small, pairs, oddFlag, remainingNumber);
-
-	printVector("large", large);
-	printVector("small", small);
-	std::cout << "end merge | current vector length == "<< _vectorSorted.size() << std::endl;
 	for (std::size_t i = 0; i == 0 || jacobsthal[i - 1] < small.size(); i++) {
-		std::cout << "i = " << i << std::endl;
 		if (i == 0) {
-			std::cout << "just insert" << std::endl;
 			_vectorSorted.insert(_vectorSorted.begin(), small[0]);
 			printVector(_vectorSorted);
 			continue;
 		}
 		std::size_t start = jacobsthal[i - 1] - 1;
 		std::size_t end = (jacobsthal[i] > small.size()) ? small.size() - 1 : jacobsthal[i] - 1;
-
-		std::cout << "jacob[i - 1] = " << jacobsthal[i - 1] << std::endl;
-		std::cout << "jacob[i] = " << jacobsthal[i] << ", end = "<< end << std::endl;
-		
 		for (std::size_t i = end; i != start; i--) {
-			std::cout << "normal insert" << std::endl;
 			vec_it itToInsert = std::lower_bound(_vectorSorted.begin(), _vectorSorted.end(), small[i]);
 			_vectorSorted.insert(itToInsert, small[i]);
 			printVector(_vectorSorted);
 		}
 	}
-	std::cout << "end recursion" << std::endl << std::endl;
 }
 
 void PmergeMe::mergeInsertionSort() {
 	mergeInsertionStart(_vectorToSort);
-	std::cout << "Sort finished" << std::endl;
 }
-
-// vec_it PmergeMe::getIterator(std::vector<unsigned int> &param, std::size_t jacobNum)
-// {
-// 	vec_it ret = param.begin();
-// 	for (std::size_t i = 0; i < jacobNum && ret != param.end(); i++)
-// 		++ret;
-// 	if (ret == param.end())
-// 		return ret - 1;
-// 	else
-// 		return ret;
-// }
 
 pvec_it PmergeMe::findPairByLarge(std::vector<std::pair<unsigned int, unsigned int> > &pairs, unsigned int largeNum)
 {
