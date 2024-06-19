@@ -26,7 +26,6 @@ private:
 protected:
 	/* #region InternalMethods */
 	void arrangePair(std::vector<std::pair<unsigned int, unsigned int> > &pairs);
-	vec_it getIterator(std::vector<unsigned int> &param, std::size_t jacobNum); // overloading needed
 	pvec_it findPairByLarge(std::vector<std::pair<unsigned int, unsigned int> > &pairs, unsigned int largeNum);
 	void makeSmallVector(std::vector<unsigned int> &large, std::vector<unsigned int> &small, std::vector<std::pair<unsigned int, unsigned int> > &pairs, bool flag, unsigned int remainingNumber);
 	void printBefore();

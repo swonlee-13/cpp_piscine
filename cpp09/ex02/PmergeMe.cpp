@@ -127,6 +127,7 @@ void PmergeMe::recursionStart(std::vector<unsigned int> &param)
 		large.push_back(pairs[i].first);
 	recursionStart(large);
 	makeSmallVector(_vectorSorted, small, pairs, oddFlag, remainingNumber);
+	unsigned int loopCount = 0;
 	for (std::size_t i = 0; i == 0 || jacobsthal[i - 1] < small.size(); i++) {
 		if (i == 0) {
 			_vectorSorted.insert(_vectorSorted.begin(), small[0]);
@@ -135,10 +136,19 @@ void PmergeMe::recursionStart(std::vector<unsigned int> &param)
 		std::size_t start = jacobsthal[i - 1] - 1;
 		std::size_t end = (jacobsthal[i] > small.size()) ? small.size() - 1 : jacobsthal[i] - 1;
 		for (std::size_t j = end; j != start; j--) {
-			vec_it itToInsert = std::lower_bound(_vectorSorted.begin(), _vectorSorted.begin() + std::pow(2, i) - 2, small[j]);
+			vec_it itEnd, itToInsert;
+			if (j == end && small.size() % 2 == 1) {
+				itEnd = _vectorSorted.end();
+			} else
+				itEnd = _vectorSorted.begin() + loopCount + j;
+			itToInsert = std::lower_bound(_vectorSorted.begin(), itEnd, small[j]);
 			_vectorSorted.insert(itToInsert, small[j]);
+			std::cout << "j | " << j << " | ";
+			std::cout << "length | " << _vectorSorted.size() << " | i = " << i << " | loop + j = " << loopCount + j << std::endl;
+			loopCount++;
 		}
 	}
+	std::cout << "finish recursion depth" << std::endl << std::endl;
 }
 
 void PmergeMe::mergeInsertionSort() {
