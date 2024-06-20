@@ -7,14 +7,16 @@
 # include <iostream>
 # include <string>
 # include <stack>
-# include <list>
+# include <deque>
 # include <algorithm>
 # include <utility>
 # include <sys/time.h>
 # include <unistd.h>
 
 typedef std::vector<unsigned int>::iterator vec_it;
+typedef std::deque<unsigned int>::iterator deq_it;
 typedef std::vector<std::pair<unsigned int, unsigned int> >::iterator pvec_it;
+typedef std::deque<std::pair<unsigned int, unsigned int> >::iterator pdeq_it;
 
 class PmergeMe
 {
@@ -23,18 +25,21 @@ private:
 	
 	std::vector<unsigned int> _vectorToSort;
 	std::vector<unsigned int> _vectorSorted;
-	std::list<unsigned int> _listToSort;
-	std::list<unsigned int> _listSorted;
-	double _timeVectorStart, _timeVectorEnd, _timeListStart, _timeListEnd;
+	std::deque<unsigned int> _dequeToSort;
+	std::deque<unsigned int> _dequeSorted;
+	double _timeVectorStart, _timeVectorEnd, _timeDequeStart, _timeDequeEnd;
 	PmergeMe();
 
 protected:
 	/* #region InternalMethods */
 	void arrangePair(std::vector<std::pair<unsigned int, unsigned int> > &pairs);
+	void arrangePair(std::deque<std::pair<unsigned int, unsigned int> > &pairs);
 	pvec_it findPairByLarge(std::vector<std::pair<unsigned int, unsigned int> > &pairs, unsigned int largeNum);
+	pdeq_it findPairByLarge(std::deque<std::pair<unsigned int, unsigned int> > &pairs, unsigned int largeNum);
 	void makeSmallVector(std::vector<unsigned int> &sortedLarge, std::vector<unsigned int> &small, std::vector<std::pair<unsigned int, unsigned int> > &pairs, bool flag, unsigned int remainingNumber);
+	void makeSmallVector(std::deque<unsigned int> &sortedLarge, std::deque<unsigned int> &small, std::deque<std::pair<unsigned int, unsigned int> > &pairs, bool flag, unsigned int remainingNumber);
 	void printTimeWithVector();
-	void printTimeWithList();
+	void printTimeWithDeque();
 	void printVector(const char * message, std::vector<unsigned int> &param);
 	void timeStamp(double &value);
 	/* #endregion */
@@ -50,6 +55,7 @@ public:
 	/* #region  AvailableMethods */
 	void mergeInsertionSort();
 	void recursionStart(std::vector<unsigned int> &param);
+	void recursionStart(std::deque<unsigned int> &param);
 	void printResult();
 	
 	/* #endregion */

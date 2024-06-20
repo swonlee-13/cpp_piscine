@@ -1,65 +1,64 @@
 #include "PmergeMe.hpp"
 
-size_t PmergeMe::jacobsthal[53] = {	1u,
-									3u,
-									5u,
-									11u,
-									21u,
-									43u,
-									85u,
-									171u,
-									341u,
-									683u,
-									1365u,
-									2731u,
-									5461u,
-									10923u,
-									21845u,
-									43691u,
-									87381u,
-									174763u,
-									349525u,
-									699051u,
-									1398101u,
-									2796203u,
-									5592405u,
-									11184811u,
-									22369621u,
-									44739243u,
-									89478485u,
-									178956971u,
-									357913941u,
-									715827883u,
-									1431655765u,
-									2863311531u,
-									5726623061u,
-									11453246123u,
-									22906492245u,
-									45812984491u,
-									91625968981u,
-									183251937963u,
-									366503875925u,
-									733007751851u,
-									1466015503701u,
-									2932031007403u,
-									5864062014805u,
-									11728124029611u,
-									23456248059221u,
-									46912496118443u,
-									93824992236885u,
-									187649984473771u,
-									375299968947541u,
-									750599937895083u,
-									1501199875790165u,
-									3002399751580331u
-};
+size_t PmergeMe::jacobsthal[53] = {1u,
+								   3u,
+								   5u,
+								   11u,
+								   21u,
+								   43u,
+								   85u,
+								   171u,
+								   341u,
+								   683u,
+								   1365u,
+								   2731u,
+								   5461u,
+								   10923u,
+								   21845u,
+								   43691u,
+								   87381u,
+								   174763u,
+								   349525u,
+								   699051u,
+								   1398101u,
+								   2796203u,
+								   5592405u,
+								   11184811u,
+								   22369621u,
+								   44739243u,
+								   89478485u,
+								   178956971u,
+								   357913941u,
+								   715827883u,
+								   1431655765u,
+								   2863311531u,
+								   5726623061u,
+								   11453246123u,
+								   22906492245u,
+								   45812984491u,
+								   91625968981u,
+								   183251937963u,
+								   366503875925u,
+								   733007751851u,
+								   1466015503701u,
+								   2932031007403u,
+								   5864062014805u,
+								   11728124029611u,
+								   23456248059221u,
+								   46912496118443u,
+								   93824992236885u,
+								   187649984473771u,
+								   375299968947541u,
+								   750599937895083u,
+								   1501199875790165u,
+								   3002399751580331u};
 
 PmergeMe::PmergeMe(int ac, char **av)
 {
 	for (int i = 1; i < ac; i++)
 	{
 		_vectorToSort.push_back(std::atoi(av[i]));
-		_listToSort.push_back(std::atoi(av[i]));
+		_dequeToSort.push_back(std::atoi(av[i]));
 	}
 }
 
@@ -67,28 +66,32 @@ PmergeMe::PmergeMe(const PmergeMe &Copy)
 {
 	this->_vectorToSort = Copy._vectorToSort;
 	this->_vectorSorted = Copy._vectorSorted;
-	this->_listToSort = Copy._listToSort;
-	this->_listSorted = Copy._listSorted;
+	this->_dequeToSort = Copy._dequeToSort;
+	this->_dequeSorted = Copy._dequeSorted;
 }
 
 PmergeMe &PmergeMe::operator=(const PmergeMe &Copy)
 {
-	if (this != &Copy) {
+	if (this != &Copy)
+	{
 		this->_vectorToSort = Copy._vectorToSort;
 		this->_vectorSorted = Copy._vectorSorted;
-		this->_listToSort = Copy._listToSort;
-		this->_listSorted = Copy._listSorted;
+		this->_dequeToSort = Copy._dequeToSort;
+		this->_dequeSorted = Copy._dequeSorted;
 	}
 	return *this;
 }
 
 PmergeMe::~PmergeMe() {}
 
+/* #region vectorSorting */
 void PmergeMe::arrangePair(std::vector<std::pair<unsigned int, unsigned int> > &pairs)
 {
 	std::vector<std::pair<unsigned int, unsigned int> >::iterator it;
-	for (it = pairs.begin(); it != pairs.end(); it++) {
-		if (it->first < it->second) {
+	for (it = pairs.begin(); it != pairs.end(); it++)
+	{
+		if (it->first < it->second)
+		{
 			unsigned int temp = it->first;
 			it->first = it->second;
 			it->second = temp;
@@ -98,7 +101,8 @@ void PmergeMe::arrangePair(std::vector<std::pair<unsigned int, unsigned int> > &
 
 void PmergeMe::makeSmallVector(std::vector<unsigned int> &sortedLarge, std::vector<unsigned int> &small, std::vector<std::pair<unsigned int, unsigned int> > &pairs, bool flag, unsigned int remainingNumber)
 {
-	for (vec_it it = sortedLarge.begin(); it != sortedLarge.end(); it++) {
+	for (vec_it it = sortedLarge.begin(); it != sortedLarge.end(); it++)
+	{
 		pvec_it pit = findPairByLarge(pairs, *it);
 		unsigned int smallNum = pit->second;
 		small.push_back(smallNum);
@@ -110,8 +114,10 @@ void PmergeMe::makeSmallVector(std::vector<unsigned int> &sortedLarge, std::vect
 
 pvec_it PmergeMe::findPairByLarge(std::vector<std::pair<unsigned int, unsigned int> > &pairs, unsigned int largeNum)
 {
-	for (pvec_it pit =  pairs.begin(); pit != pairs.end(); pit++) {
-		if (pit->first == largeNum) {
+	for (pvec_it pit = pairs.begin(); pit != pairs.end(); pit++)
+	{
+		if (pit->first == largeNum)
+		{
 			return pit;
 		}
 	}
@@ -122,14 +128,16 @@ void PmergeMe::recursionStart(std::vector<unsigned int> &param)
 {
 	std::vector<std::pair<unsigned int, unsigned int> > pairs;
 	std::vector<unsigned int> large, small;
-	bool			oddFlag = (param.size() % 2 == 0) ? false : true;
-	unsigned int	remainingNumber = oddFlag ? param.back() : 0;
+	bool oddFlag = (param.size() % 2 == 0) ? false : true;
+	unsigned int remainingNumber = oddFlag ? param.back() : 0;
 
-	if (param.size() < 2) {
+	if (param.size() < 2)
+	{
 		_vectorSorted.push_back(param[0]);
-		return ;
+		return;
 	}
-	for (std::size_t i = 0; i < param.size(); i += 2) {
+	for (std::size_t i = 0; i < param.size(); i += 2)
+	{
 		if (!(oddFlag && i == param.size() - 1))
 			pairs.push_back(std::make_pair(param[i], param[i + 1]));
 	}
@@ -139,14 +147,17 @@ void PmergeMe::recursionStart(std::vector<unsigned int> &param)
 	recursionStart(large);
 	makeSmallVector(_vectorSorted, small, pairs, oddFlag, remainingNumber);
 	unsigned int loopCount = 0;
-	for (std::size_t i = 0; i == 0 || jacobsthal[i - 1] < small.size(); i++) {
-		if (i == 0) {
+	for (std::size_t i = 0; i == 0 || jacobsthal[i - 1] < small.size(); i++)
+	{
+		if (i == 0)
+		{
 			_vectorSorted.insert(_vectorSorted.begin(), small[0]);
 			continue;
 		}
 		std::size_t start = jacobsthal[i - 1] - 1;
 		std::size_t end = (jacobsthal[i] > small.size()) ? small.size() - 1 : jacobsthal[i] - 1;
-		for (std::size_t j = end; j != start; j--) {
+		for (std::size_t j = end; j != start; j--)
+		{
 			vec_it itEnd = (j == end && small.size() % 2 == 1) ? _vectorSorted.end() : _vectorSorted.begin() + loopCount + j;
 			vec_it itToInsert = std::lower_bound(_vectorSorted.begin(), itEnd, small[j]);
 			_vectorSorted.insert(itToInsert, small[j]);
@@ -155,6 +166,94 @@ void PmergeMe::recursionStart(std::vector<unsigned int> &param)
 	}
 }
 
+/* #endregion */
+
+/* #region dequeSorting */
+void PmergeMe::arrangePair(std::deque<std::pair<unsigned int, unsigned int> > &pairs)
+{
+	std::deque<std::pair<unsigned int, unsigned int> >::iterator it;
+	for (it = pairs.begin(); it != pairs.end(); it++)
+	{
+		if (it->first < it->second)
+		{
+			unsigned int temp = it->first;
+			it->first = it->second;
+			it->second = temp;
+		}
+	}
+}
+
+void PmergeMe::makeSmallVector(std::deque<unsigned int> &sortedLarge, std::deque<unsigned int> &small, std::deque<std::pair<unsigned int, unsigned int> > &pairs, bool flag, unsigned int remainingNumber)
+{
+	for (deq_it it = sortedLarge.begin(); it != sortedLarge.end(); it++)
+	{
+		pdeq_it pit = findPairByLarge(pairs, *it);
+		unsigned int smallNum = pit->second;
+		small.push_back(smallNum);
+		pairs.erase(pit);
+	}
+	if (flag)
+		small.push_back(remainingNumber);
+}
+
+pdeq_it PmergeMe::findPairByLarge(std::deque<std::pair<unsigned int, unsigned int> > &pairs, unsigned int largeNum)
+{
+	for (pdeq_it pit = pairs.begin(); pit != pairs.end(); pit++)
+	{
+		if (pit->first == largeNum)
+		{
+			return pit;
+		}
+	}
+	return pairs.end();
+}
+
+void PmergeMe::recursionStart(std::deque<unsigned int> &param)
+{
+	std::deque<std::pair<unsigned int, unsigned int> > pairs;
+	std::deque<unsigned int> large, small;
+	bool oddFlag = (param.size() % 2 == 0) ? false : true;
+	unsigned int remainingNumber = oddFlag ? param.back() : 0;
+
+	if (param.size() < 2)
+	{
+		_dequeSorted.push_back(param[0]);
+		return;
+	}
+	for (std::size_t i = 0; i < param.size(); i += 2)
+	{
+		if (!(oddFlag && i == param.size() - 1))
+			pairs.push_back(std::make_pair(param[i], param[i + 1]));
+	}
+	arrangePair(pairs);
+	for (std::size_t i = 0; i < pairs.size(); i++)
+		large.push_back(pairs[i].first);
+	recursionStart(large);
+	makeSmallVector(_dequeSorted, small, pairs, oddFlag, remainingNumber);
+	unsigned int loopCount = 0;
+	for (std::size_t i = 0; i == 0 || jacobsthal[i - 1] < small.size(); i++)
+	{
+		if (i == 0)
+		{
+			_dequeSorted.insert(_dequeSorted.begin(), small[0]);
+			continue;
+		}
+		std::size_t start = jacobsthal[i - 1] - 1;
+		std::size_t end = (jacobsthal[i] > small.size()) ? small.size() - 1 : jacobsthal[i] - 1;
+		for (std::size_t j = end; j != start; j--)
+		{
+			deq_it itEnd = (j == end && small.size() % 2 == 1) ? _dequeSorted.end() : _dequeSorted.begin() + loopCount + j;
+			deq_it itToInsert = std::lower_bound(_dequeSorted.begin(), itEnd, small[j]);
+			_dequeSorted.insert(itToInsert, small[j]);
+			loopCount++;
+		}
+	}
+}
+
+/* #endregion */
+
+/* #region utils */
+
 void PmergeMe::timeStamp(double &value)
 {
 	struct timeval time;
@@ -162,20 +261,21 @@ void PmergeMe::timeStamp(double &value)
 	value = time.tv_sec * 1000000 + time.tv_usec;
 }
 
-
 void PmergeMe::mergeInsertionSort()
 {
 	timeStamp(_timeVectorStart);
 	recursionStart(_vectorToSort);
 	timeStamp(_timeVectorEnd);
-	timeStamp(_timeListStart);
-	// recursionStart(_vectorToSort); // overloading needed
-	timeStamp(_timeListEnd);
+	timeStamp(_timeDequeStart);
+	recursionStart(_dequeToSort); // overloading needed
+	timeStamp(_timeDequeEnd);
 }
 
-void PmergeMe::printVector(const char *message, std::vector<unsigned int> &param) {
+void PmergeMe::printVector(const char *message, std::vector<unsigned int> &param)
+{
 	std::cout << message;
-	for (std::size_t i = 0; i < param.size() ; i++) {
+	for (std::size_t i = 0; i < param.size(); i++)
+	{
 		std::cout << param[i];
 		if (i != _vectorToSort.size() - 1)
 			std::cout << " ";
@@ -188,17 +288,19 @@ void PmergeMe::printResult()
 	printVector("Before:   ", _vectorToSort);
 	printVector("After:    ", _vectorSorted);
 	printTimeWithVector();
-	printTimeWithList();
+	printTimeWithDeque();
 }
 
 void PmergeMe::printTimeWithVector()
 {
 	double time = _timeVectorEnd - _timeVectorStart;
-	std::cout << "Time to process a range of " << std::setw(4) << std::left << _vectorToSort.size() <<  " elements with std::vector : " << time << " us" << std::endl;
+	std::cout << "Time to process a range of " << std::setw(4) << std::left << _vectorToSort.size() << " elements with std::vector : " << time << " us" << std::endl;
 }
 
-void PmergeMe::printTimeWithList()
+void PmergeMe::printTimeWithDeque()
 {
-	double time = _timeListEnd - _timeListStart;
-	std::cout << "Time to process a range of " << std::setw(4) << std::left << _vectorToSort.size() <<  " elements with std::vector : " << time << " us" << std::endl;
+	double time = _timeDequeEnd - _timeDequeStart;
+	std::cout << "Time to process a range of " << std::setw(4) << std::left << _vectorToSort.size() << " elements with std::deque : " << time << " us" << std::endl;
 }
+
+/* #endregion */
