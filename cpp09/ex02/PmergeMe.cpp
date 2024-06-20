@@ -154,11 +154,12 @@ void PmergeMe::recursionStart(std::vector<unsigned int> &param)
 		}
 	}
 }
+
 void PmergeMe::timeStamp(double &value)
 {
 	struct timeval time;
 	gettimeofday(&time, NULL);
-	value = time.tv_sec * 1000 + time.tv_usec / 1000;
+	value = time.tv_sec * 1000000 + time.tv_usec;
 }
 
 
@@ -168,7 +169,7 @@ void PmergeMe::mergeInsertionSort()
 	recursionStart(_vectorToSort);
 	timeStamp(_timeVectorEnd);
 	timeStamp(_timeListStart);
-	recursionStart(_vectorToSort); // overloading needed
+	// recursionStart(_vectorToSort); // overloading needed
 	timeStamp(_timeListEnd);
 }
 
@@ -192,10 +193,12 @@ void PmergeMe::printResult()
 
 void PmergeMe::printTimeWithVector()
 {
-	std::cout << "time here" << std::endl;
+	double time = _timeVectorEnd - _timeVectorStart;
+	std::cout << "Time to process a range of " << std::setw(4) << std::left << _vectorToSort.size() <<  " elements with std::vector : " << time << " us" << std::endl;
 }
 
 void PmergeMe::printTimeWithList()
 {
-	std::cout << "time here" << std::endl;
+	double time = _timeListEnd - _timeListStart;
+	std::cout << "Time to process a range of " << std::setw(4) << std::left << _vectorToSort.size() <<  " elements with std::vector : " << time << " us" << std::endl;
 }
