@@ -1,14 +1,17 @@
 #ifndef PMERGEME_HPP
-#define PMERGEME_HPP
+# define PMERGEME_HPP
 
-#include <vector>
-#include <deque>
-#include <iostream>
-#include <string>
-#include <stack>
-#include <list>
-#include <algorithm>
-#include <utility>
+# include <iomanip>
+# include <vector>
+# include <deque>
+# include <iostream>
+# include <string>
+# include <stack>
+# include <list>
+# include <algorithm>
+# include <utility>
+# include <sys/time.h>
+# include <unistd.h>
 
 typedef std::vector<unsigned int>::iterator vec_it;
 typedef std::vector<std::pair<unsigned int, unsigned int> >::iterator pvec_it;
@@ -16,11 +19,13 @@ typedef std::vector<std::pair<unsigned int, unsigned int> >::iterator pvec_it;
 class PmergeMe
 {
 private:
+	static size_t jacobsthal[53];
+	
 	std::vector<unsigned int> _vectorToSort;
 	std::vector<unsigned int> _vectorSorted;
 	std::list<unsigned int> _listToSort;
 	std::list<unsigned int> _listSorted;
-	static size_t jacobsthal[53];
+	double _timeVectorStart, _timeVectorEnd, _timeListStart, _timeListEnd;
 	PmergeMe();
 
 protected:
@@ -30,11 +35,9 @@ protected:
 	void makeSmallVector(std::vector<unsigned int> &sortedLarge, std::vector<unsigned int> &small, std::vector<std::pair<unsigned int, unsigned int> > &pairs, bool flag, unsigned int remainingNumber);
 	void printTimeWithVector();
 	void printTimeWithList();
-
-	/* #endregion */
-
 	void printVector(const char * message, std::vector<unsigned int> &param);
-
+	void timeStamp(double &value);
+	/* #endregion */
 public:
 	/* #region OCCF */
 	PmergeMe(int ac, char **av);
@@ -52,10 +55,5 @@ public:
 	/* #endregion */
 	
 };
-
-inline bool operator<(const std::pair<const unsigned int, const unsigned int> &lft, const std::pair<const unsigned int, const unsigned int> &rgt)
-{
-	return (lft.first < rgt.first);
-}
 
 #endif

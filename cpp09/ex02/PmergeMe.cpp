@@ -154,10 +154,22 @@ void PmergeMe::recursionStart(std::vector<unsigned int> &param)
 		}
 	}
 }
+void PmergeMe::timeStamp(double &value)
+{
+	struct timeval time;
+	gettimeofday(&time, NULL);
+	value = time.tv_sec * 1000 + time.tv_usec / 1000;
+}
 
-void PmergeMe::mergeInsertionSort() {
-	timeStamp();
+
+void PmergeMe::mergeInsertionSort()
+{
+	timeStamp(_timeVectorStart);
 	recursionStart(_vectorToSort);
+	timeStamp(_timeVectorEnd);
+	timeStamp(_timeListStart);
+	recursionStart(_vectorToSort); // overloading needed
+	timeStamp(_timeListEnd);
 }
 
 void PmergeMe::printVector(const char *message, std::vector<unsigned int> &param) {
