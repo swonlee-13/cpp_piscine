@@ -12,6 +12,7 @@
 # include <utility>
 # include <sys/time.h>
 # include <unistd.h>
+# include <sstream>
 
 typedef std::vector<unsigned int>::iterator vec_it;
 typedef std::deque<unsigned int>::iterator deq_it;
@@ -21,7 +22,7 @@ typedef std::deque<std::pair<unsigned int, unsigned int> >::iterator pdeq_it;
 class PmergeMe
 {
 private:
-	static size_t jacobsthal[53];
+	static std::size_t jacobsthal[53];
 	
 	std::vector<unsigned int> _vectorToSort;
 	std::vector<unsigned int> _vectorSorted;
@@ -53,6 +54,7 @@ public:
 	/* #endregion */
 
 	/* #region  AvailableMethods */
+	bool validCheck(int ac, char **av);
 	void mergeInsertionSort();
 	void recursionStart(std::vector<unsigned int> &param);
 	void recursionStart(std::deque<unsigned int> &param);

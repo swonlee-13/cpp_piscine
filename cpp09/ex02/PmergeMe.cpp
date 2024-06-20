@@ -1,6 +1,6 @@
 #include "PmergeMe.hpp"
 
-size_t PmergeMe::jacobsthal[53] = {1u,
+std::size_t PmergeMe::jacobsthal[53] = {1u,
 								   3u,
 								   5u,
 								   11u,
@@ -84,7 +84,6 @@ PmergeMe &PmergeMe::operator=(const PmergeMe &Copy)
 
 PmergeMe::~PmergeMe() {}
 
-/* #region vectorSorting */
 void PmergeMe::arrangePair(std::vector<std::pair<unsigned int, unsigned int> > &pairs)
 {
 	std::vector<std::pair<unsigned int, unsigned int> >::iterator it;
@@ -167,9 +166,6 @@ void PmergeMe::recursionStart(std::vector<unsigned int> &param)
 	}
 }
 
-/* #endregion */
-
-/* #region dequeSorting */
 void PmergeMe::arrangePair(std::deque<std::pair<unsigned int, unsigned int> > &pairs)
 {
 	std::deque<std::pair<unsigned int, unsigned int> >::iterator it;
@@ -252,9 +248,19 @@ void PmergeMe::recursionStart(std::deque<unsigned int> &param)
 	}
 }
 
-/* #endregion */
-
-/* #region utils */
+bool PmergeMe::validCheck(int ac, char **av)
+{
+	for (int i = 1; i < ac; i++)
+	{
+		std::stringstream ss;
+		ss << _vectorToSort[i - 1];
+		std::string str = ss.str();
+		std::string avStr(av[i]);
+		if (str != avStr || avStr[0] == '-')
+			return false;
+	}
+	return true;
+}
 
 void PmergeMe::timeStamp(double &value)
 {
@@ -269,7 +275,7 @@ void PmergeMe::mergeInsertionSort()
 	recursionStart(_vectorToSort);
 	timeStamp(_timeVectorEnd);
 	timeStamp(_timeDequeStart);
-	recursionStart(_dequeToSort); // overloading needed
+	recursionStart(_dequeToSort);
 	timeStamp(_timeDequeEnd);
 }
 
@@ -304,5 +310,3 @@ void PmergeMe::printTimeWithDeque()
 	double time = _timeDequeEnd - _timeDequeStart;
 	std::cout << "Time to process a range of " << std::setw(4) << std::left << _vectorToSort.size() << " elements with std::deque : " << time << " us" << std::endl;
 }
-
-/* #endregion */
