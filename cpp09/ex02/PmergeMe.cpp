@@ -152,6 +152,7 @@ void PmergeMe::recursionStart(std::vector<unsigned int> &param)
 		if (i == 0)
 		{
 			_vectorSorted.insert(_vectorSorted.begin(), small[0]);
+			loopCount++;
 			continue;
 		}
 		std::size_t start = jacobsthal[i - 1] - 1;
@@ -236,6 +237,7 @@ void PmergeMe::recursionStart(std::deque<unsigned int> &param)
 		if (i == 0)
 		{
 			_dequeSorted.insert(_dequeSorted.begin(), small[0]);
+			loopCount++;
 			continue;
 		}
 		std::size_t start = jacobsthal[i - 1] - 1;
