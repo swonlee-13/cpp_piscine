@@ -7,20 +7,21 @@ int main(int ac, char **av)
 	(void)av;
 	if (ac != 2) {
 		std::cerr << "Error: could not open file." << std::endl;
-		return 1;
+		return EXIT_FAILURE;
 	}
 	std::string file = av[1];
-	if (file.substr(file.length() - 4, file.length()) != ".txt") {
+	std::string extention = file.substr(file.length() - 4, file.length());
+	if (extention != ".txt" && extention != ".csv") {
 		std::cerr << "Error: invalid filename extension.";
-		return 1;
+		return EXIT_FAILURE;
 	}
 	std::ifstream rawdata("./data.csv");
 	std::ifstream input(file);
 	if (rawdata.fail() || input.fail()) {
 		std::cerr << "Error: could not open file." <<  std::endl;
-		return 1;
+		return EXIT_FAILURE;
 	}
 	BitCoinExchange Data;
 	Data.initializePriceData(rawdata);
-	Data.initializeInputData(input);
+	Data.handleInputData(input);
 }

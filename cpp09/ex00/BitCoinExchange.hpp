@@ -19,7 +19,7 @@ class BitCoinExchange
 		BitCoinExchange();
 		~BitCoinExchange();
 
-		void initializeInputData(std::ifstream &raw);
+		void handleInputData(std::ifstream &raw);
 		void initializePriceData(std::ifstream &raw);
 
 		void printLine(std::pair<int, double> &line);

@@ -36,7 +36,7 @@ std::pair<int, double> BitCoinExchange::parseData(std::string &line) const {
 	return (std::pair<int, double>(rawData, value));
 }
 
-void BitCoinExchange::initializeInputData(std::ifstream &raw) {
+void BitCoinExchange::handleInputData(std::ifstream &raw) {
 	std::string str;
 	std::pair<int, double> line;
 
