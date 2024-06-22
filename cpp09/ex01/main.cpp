@@ -12,8 +12,8 @@ int main(int ac, char **av)
 	}
 	RPN Calc(av[1]);
 	try {
-	Calc.calculateRPN();
-	Calc.printResult();
+		Calc.calculateRPN();
+		Calc.printResult();
 	} catch (std::exception &e) {
 		std::cerr << e.what() << std::endl;
 	}
